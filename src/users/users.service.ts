@@ -36,13 +36,13 @@ export class UsersService {
     if (filters.pseudonyme) {
       query['pseudonyme'] = filters.pseudonyme;
     }
-    if (filters.name) {
-      query['name'] = filters.name;
-    }
     if (filters.userType) {
       query['userType'] = filters.userType;
     }
 
+    if (filters.name) {
+      query['name'] = { $regex: filters.name, $options: 'i' };
+    }
     if (filters.commentaire) {
       query['commentaire'] = { $regex: filters.commentaire, $options: 'i' };
     }
