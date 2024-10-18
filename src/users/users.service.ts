@@ -6,7 +6,7 @@ import { User, UserDocument } from "./user.schema";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
 
   async create(createUserDto: any): Promise<User> {
     const salt = await bcrypt.genSalt();

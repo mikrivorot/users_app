@@ -8,7 +8,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Body,
   Param,
@@ -19,20 +18,23 @@ import { UsersService } from "./users.service";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "../guards/permissions.guard";
 import { Roles } from "../decorators/permissions.decorator";
+import { CreateUserDto } from './dto/request/user.create.dto';
+import { UpdateUserDto } from './dto/request/user.update.dto';
+import { UserResponseDto } from './dto/response/user.dto';
 
 @ApiTags("users")
 @ApiBearerAuth()
 @Controller("users")
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) { }
 
   @ApiOperation({ summary: "Create a new user (Admin only)" })
   @ApiResponse({ status: 201, description: "The user has been created." })
   @ApiResponse({ status: 403, description: "Forbidden." })
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Roles("admin")
-  @Post("create")
-  async createUser(@Body() createUserDto: any) {
+  @Post()
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
     return this.usersService.create(createUserDto);
   }
 
@@ -40,7 +42,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "User profile retrieved." })
   @UseGuards(AuthGuard("jwt"))
   @Get("me")
-  async getMe(@Param("id") userId: string) {
+  async getMe(@Param("id") userId: string): Promise<UserResponseDto> {
     return this.usersService.findById(userId);
   }
 
@@ -50,7 +52,7 @@ export class UsersController {
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Roles("admin")
   @Get()
-  async getAllUsers() {
+  async getAllUsers(): Promise<UserResponseDto[]> {
     return this.usersService.findAll();
   }
 
@@ -58,7 +60,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "User profile updated." })
   @UseGuards(AuthGuard("jwt"))
   @Patch(":id")
-  async updateUser(@Param("id") userId: string, @Body() updateUserDto: any) {
+  async updateUser(@Param("id") userId: string, @Body() updateUserDto: UpdateUserDto): Promise<void> {
     return this.usersService.update(userId, updateUserDto);
   }
 
@@ -68,7 +70,7 @@ export class UsersController {
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @Roles("admin")
   @Delete(":id")
-  async deleteUser(@Param("id") userId: string) {
+  async deleteUser(@Param("id") userId: string): Promise<null> {
     return this.usersService.delete(userId);
   }
 }
