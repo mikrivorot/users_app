@@ -4,7 +4,6 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 
 export class UpdateUserDto {
   @ApiPropertyOptional({
-    example: "john_doe",
     description: "Unique pseudonym for the user",
   })
   @IsString()
@@ -12,7 +11,6 @@ export class UpdateUserDto {
   pseudonyme?: string;
 
   @ApiPropertyOptional({
-    example: "John Doe",
     description: "Full name of the user",
   })
   @IsString()
@@ -20,7 +18,6 @@ export class UpdateUserDto {
   name?: string;
 
   @ApiPropertyOptional({
-    example: "123 Main St, City, Country",
     description: "Address of the user",
   })
   @IsString()
@@ -28,7 +25,6 @@ export class UpdateUserDto {
   address?: string;
 
   @ApiPropertyOptional({
-    example: "Optional comment about the user",
     description: "Any comment about the user",
   })
   @IsString()
@@ -36,7 +32,6 @@ export class UpdateUserDto {
   comment?: string;
 
   @ApiPropertyOptional({
-    example: "password123",
     description: "Password for the user (at least 6 characters)",
   })
   @IsString()
@@ -45,10 +40,9 @@ export class UpdateUserDto {
   password?: string;
 
   @ApiPropertyOptional({
-    example: "non-admin",
     description: "User type, can be admin or non-admin",
   })
-  @IsEnum(["admin", "non-admin"], {
+  @IsEnum(["admin", "user"], {
     message: "User type must be admin or non-admin",
   })
   @IsOptional()

@@ -19,7 +19,8 @@ Aller sur le site `http://localhost:3000/api` pour voir Swagger.
 
 #### 3.1 Créé premier utilisateur
 
-On a besoin de cree premier utilisateur (admin) pour faire autorisation et utiliser l'application
+On a besoin de cree premier utilisateur (admin) pour faire autorisation et utiliser l'application;
+On saveguarde des mots des passe comme hashes. Pour premier Admin j'ai créé un script dans ./scripts/gererateHashWithSalt.js
 
 ```
 docker exec -it mongo_for_test_technique bash
@@ -31,7 +32,7 @@ db.users.insertOne({
   name: "admin",
   address: "",
   commentaire: "Utilisateur Admin pour commencer utilisation et creer les autres utilisateur",
-  password: "admin", // Change to a strong password
+  password: "$2a$10$oHo3Rs0JdC2sBy7aLvWcgOd8bFK/.tRH.4KN/gULLQBtlV7Hy8Ndy"
   userType: "admin"
 });
 ```

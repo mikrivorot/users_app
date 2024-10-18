@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle("User Management API")
-    .setDescription("The user management API description")
+    .setTitle("Test Technique")
+    .setDescription("Test Technique pour Développeur Senior/Lead en Nest.js")
     .setVersion("1.0")
     .addBearerAuth()
     .build();

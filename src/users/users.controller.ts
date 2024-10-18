@@ -3,6 +3,7 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
+  ApiOkResponse
 } from "@nestjs/swagger";
 import {
   Controller,
@@ -16,11 +17,14 @@ import {
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { AuthGuard } from "@nestjs/passport";
-import { RolesGuard } from "../guards/permissions.guard";
-import { Roles } from "../decorators/permissions.decorator";
+import { IsSameUserOrAdminGuard } from "../guards/same.user.or.admin.guard";
+import { AdminGuard } from '../guards/admin.guard'
+import { UserTypes } from "../decorators/permissions.decorator";
 import { CreateUserDto } from './dto/request/user.create.dto';
 import { UpdateUserDto } from './dto/request/user.update.dto';
 import { UserResponseDto } from './dto/response/user.dto';
+import { UserMapper } from './mappers/users'
+import { User, UserDocument } from "./user.schema";
 
 @ApiTags("users")
 @ApiBearerAuth()
@@ -28,49 +32,58 @@ import { UserResponseDto } from './dto/response/user.dto';
 export class UsersController {
   constructor(private usersService: UsersService) { }
 
-  @ApiOperation({ summary: "Create a new user (Admin only)" })
-  @ApiResponse({ status: 201, description: "The user has been created." })
-  @ApiResponse({ status: 403, description: "Forbidden." })
-  @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @Roles("admin")
+  @ApiOperation({ summary: "Create a new user" })
+  @ApiOkResponse({ status: 201, description: "The user has been created.", type: UserResponseDto })
+  @ApiResponse({ status: 403, description: "Forbidden for non-admin users" })
+  @UseGuards(AuthGuard("jwt"), AdminGuard)
+  @UserTypes("admin")
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return this.usersService.create(createUserDto);
+    const user: User = await this.usersService.create(createUserDto);
+    return UserMapper.toUserDto(user);
   }
 
-  @ApiOperation({ summary: "Get current logged-in user profile" })
-  @ApiResponse({ status: 200, description: "User profile retrieved." })
-  @UseGuards(AuthGuard("jwt"))
-  @Get("me")
-  async getMe(@Param("id") userId: string): Promise<UserResponseDto> {
-    return this.usersService.findById(userId);
-  }
-
-  @ApiOperation({ summary: "Get a list of all users (Admin only)" })
-  @ApiResponse({ status: 200, description: "List of users retrieved." })
-  @ApiResponse({ status: 403, description: "Forbidden." })
-  @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @Roles("admin")
+  @ApiOperation({ summary: "Get a list of all users" })
+  @ApiOkResponse({ status: 200, description: "List of users retrieved.", type: [UserResponseDto] })
+  @ApiResponse({ status: 403, description: "Forbidden for non-admin users" })
+  @UseGuards(AuthGuard("jwt"), AdminGuard)
+  @UserTypes("admin")
   @Get()
   async getAllUsers(): Promise<UserResponseDto[]> {
-    return this.usersService.findAll();
+    const users: User[] = await this.usersService.findAll();
+    return users.map(user => UserMapper.toUserDto(user));
+  }
+
+  @ApiOperation({ summary: "Delete a user" })
+  @ApiResponse({ status: 200, description: "User deleted." })
+  @ApiResponse({ status: 403, description: "Forbidden for non-admin users" })
+  @UseGuards(AuthGuard("jwt"), AdminGuard)
+  @UserTypes("admin")
+  @Delete(":pseudonyme")
+  async deleteUser(@Param("pseudonyme") pseudonyme: string): Promise<UserResponseDto> {
+    const user: UserDocument = await this.usersService.delete(pseudonyme);
+    return UserMapper.toUserDto(user);
+  }
+
+  @ApiOperation({ summary: "Get user" })
+  @ApiOkResponse({ status: 200, description: "User profile retrieved.", type: UserResponseDto })
+  @ApiResponse({ status: 403, description: "Forbidden to retrieve profiles of other users for non-admin users" })
+  @UseGuards(AuthGuard("jwt"), IsSameUserOrAdminGuard)
+  @UserTypes("admin")
+  @Get(":pseudonyme")
+  async getMe(@Param("pseudonyme") pseudonyme: string): Promise<UserResponseDto> {
+    const userByPseudonyme: User = await this.usersService.findOneByPseudonyme(pseudonyme);
+    return UserMapper.toUserDto(userByPseudonyme);
   }
 
   @ApiOperation({ summary: "Update a user profile" })
-  @ApiResponse({ status: 200, description: "User profile updated." })
-  @UseGuards(AuthGuard("jwt"))
-  @Patch(":id")
-  async updateUser(@Param("id") userId: string, @Body() updateUserDto: UpdateUserDto): Promise<void> {
-    return this.usersService.update(userId, updateUserDto);
-  }
-
-  @ApiOperation({ summary: "Delete a user (Admin only)" })
-  @ApiResponse({ status: 200, description: "User deleted." })
-  @ApiResponse({ status: 403, description: "Forbidden." })
-  @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @Roles("admin")
-  @Delete(":id")
-  async deleteUser(@Param("id") userId: string): Promise<null> {
-    return this.usersService.delete(userId);
+  @ApiOkResponse({ status: 200, description: "User profile updated.", type: UserResponseDto })
+  @ApiResponse({ status: 403, description: "Forbidden to retrieve profiles of other users for non-admin users" })
+  @UseGuards(AuthGuard("jwt"), IsSameUserOrAdminGuard)
+  @UserTypes("admin")
+  @Patch(":pseudonyme")
+  async updateUser(@Param("pseudonyme") pseudonyme: string, @Body() updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    const updateUser: User = await this.usersService.update(pseudonyme, updateUserDto);
+    return UserMapper.toUserDto(updateUser);
   }
 }

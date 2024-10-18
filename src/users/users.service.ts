@@ -19,11 +19,11 @@ export class UsersService {
     return createdUser.save();
   }
 
-  async findOneByPseudonyme(pseudonyme: string): Promise<User | undefined> {
+  async findOneByPseudonyme(pseudonyme: string): Promise<UserDocument | undefined> {
     return this.userModel.findOne({ pseudonyme }).exec();
   }
 
-  async findById(userId: string): Promise<User> {
+  async findById(userId: string): Promise<UserDocument> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
@@ -31,24 +31,28 @@ export class UsersService {
     return user;
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserDocument[]> {
     return this.userModel.find().exec();
   }
 
-  async update(userId: string, updateUserDto: UpdateUserDto): Promise<void> {
-    const user = await this.findById(userId);
+  async update(pseudonyme: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
+    const user: UserDocument = await this.findOneByPseudonyme(pseudonyme);
     if (updateUserDto.password) {
       const salt = await bcryptjs.genSalt();
       updateUserDto.password = await bcryptjs.hash(updateUserDto.password, salt);
     }
     Object.assign(user, updateUserDto);
-    // return user.save();
+    return user.save();
   }
 
-  async delete(userId: string): Promise<any> {
-    const result = await this.userModel.findByIdAndDelete(userId).exec();
+  async delete(pseudonyme: string): Promise<UserDocument> {
+    const user: UserDocument = await this.findOneByPseudonyme(pseudonyme);
+    if (!user) {
+      throw new NotFoundException(`User ${pseudonyme} not found`);
+    }
+    const result = await this.userModel.findByIdAndDelete(user?._id).exec();
     if (!result) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException(`User with ID ${user?._id} not found`);
     }
     return result;
   }

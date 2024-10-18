@@ -33,9 +33,12 @@ describe("UsersController", () => {
 
   it("should create a user", async () => {
     const userDto = {
-      pseudonyme: "user1",
-      password: "password",
-      name: "User One",
+      "pseudonyme": "non_admin",
+      "name": "John Doe",
+      "address": "123 Main St, City, Country",
+      "comment": "Optional comment about the user",
+      "password": "non_admin",
+      "userType": "user"
     };
     await controller.createUser(userDto);
     expect(service.create).toHaveBeenCalledWith(userDto);

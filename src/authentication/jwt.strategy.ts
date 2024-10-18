@@ -1,8 +1,8 @@
-// src/auth/strategies/jwt.strategy.ts
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { jwtConstants } from "../constants";
+import { jwtConstants } from "./constants";
+import { PayloadToSign } from './types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -14,10 +14,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // TODO: add types here
-  async validate(payload: any) {
+  async validate(payload: PayloadToSign) {
     return {
-      userId: payload.sub,
       pseudonyme: payload.pseudonyme,
       userType: payload.userType,
     };
