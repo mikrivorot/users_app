@@ -3,12 +3,13 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import * as bcryptjs from "bcryptjs";
 import { User, UserDocument } from "./user.schema";
-
+import { CreateUserDto } from './dto/request/user.create.dto';
+import { UpdateUserDto } from './dto/request/user.update.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
 
-  async create(createUserDto: any): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const salt = await bcryptjs.genSalt();
     const hashedPassword = await bcryptjs.hash(createUserDto.password, salt);
     const createdUser = new this.userModel({
@@ -34,7 +35,7 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
-  async update(userId: string, updateUserDto: any): Promise<void> {
+  async update(userId: string, updateUserDto: UpdateUserDto): Promise<void> {
     const user = await this.findById(userId);
     if (updateUserDto.password) {
       const salt = await bcryptjs.genSalt();
@@ -44,7 +45,6 @@ export class UsersService {
     // return user.save();
   }
 
-  // Delete a user by ID (admin only)
   async delete(userId: string): Promise<any> {
     const result = await this.userModel.findByIdAndDelete(userId).exec();
     if (!result) {

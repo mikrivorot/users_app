@@ -1,4 +1,3 @@
-// src/users/users.controller.spec.ts
 import { Test, TestingModule } from "@nestjs/testing";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
@@ -28,8 +27,8 @@ describe("UsersController", () => {
     service = module.get<UsersService>(UsersService);
   });
 
-  it("should be defined", () => {
-    expect(controller).toBeDefined();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it("should create a user", async () => {
@@ -42,7 +41,7 @@ describe("UsersController", () => {
     expect(service.create).toHaveBeenCalledWith(userDto);
   });
 
-  it("should get all users (admin only)", async () => {
+  it("should get all users", async () => {
     await controller.getAllUsers();
     expect(service.findAll).toHaveBeenCalled();
   });
@@ -53,7 +52,7 @@ describe("UsersController", () => {
     expect(service.update).toHaveBeenCalledWith("userId", userDto);
   });
 
-  it("should delete a user (admin only)", async () => {
+  it("should delete a user", async () => {
     await controller.deleteUser("userId");
     expect(service.delete).toHaveBeenCalledWith("userId");
   });
