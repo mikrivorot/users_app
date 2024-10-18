@@ -19,8 +19,8 @@ Aller sur le site `http://localhost:3000/api` pour voir Swagger.
 
 #### 3.1 Créé premier utilisateur
 
-On a besoin de créer premier utilisateur (admin) pour faire autorisation et utiliser l'application;
-On sauvegarde des mots des passe comme hashes. Pour premier Admin j'ai créé un script dans ./scripts/gererateHashWithSalt.js
+On a besoin de créer le premier utilisateur (admin) pour faire autorisation et utiliser l'application;
+On sauvegarde les mots des passe comme hashes. Pour premier Admin j'ai créé un script dans `./scripts/gererateHashWithSalt.js`
 
 ```
 docker exec -it mongo_for_test_technique bash
@@ -32,7 +32,7 @@ db.users.insertOne({
   name: "admin",
   address: "",
   commentaire: "Utilisateur Admin pour commencer utilisation et creer les autres utilisateur",
-  password: "$2a$10$oHo3Rs0JdC2sBy7aLvWcgOd8bFK/.tRH.4KN/gULLQBtlV7Hy8Ndy"
+  password: <hash>
   userType: "admin"
 });
 ```
@@ -51,13 +51,14 @@ Premier Admin a été créé
 #### Créé jwt token pour lancer l'utilisation de Swagger
 En utilisant Swagger API (`http://localhost:3000/api`) c'est possible de verifier tout les APIs.
 
-En utilisant l'utilisateur Admin on a créé, c'est possible d'optenir un JWT token:
+En utilisant l'utilisateur Admin on a créé, c'est possible d'obtenir un JWT token:
 
 ![alt text](./docs/post_auth_login.png)
 
-Apres l'execution, le token est disponible comme un reponse d'appel:
+Après l'exécution, le token est disponible comme un réponse d'appel:
 
 ![alt text](./docs/access_token.png)
 
-Apres l'authirisation, c'est possible d'utiliser tout les fonctions secutisé
+Après l'autorisation, c'est possible d'utiliser tout les fonctions sécurisé
 ![alt text](./docs/login_logout.png)
+![alt text](./docs/swagger_api.png)

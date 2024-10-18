@@ -2,7 +2,7 @@
 
 #### Démarrer les conteneurs
 ```
-npm run start:docker:full`
+npm run start:docker:full
 ```
 
 ![alt text](image.png)
@@ -10,5 +10,5 @@ npm run start:docker:full`
 
 #### Arrêter les conteneurs
 ```
-npm run stop:docker:full`
+npm run stop:docker:full
 ```
