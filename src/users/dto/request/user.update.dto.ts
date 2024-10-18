@@ -29,7 +29,7 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  comment?: string;
+  commentaire?: string;
 
   @ApiPropertyOptional({
     description: "Password for the user (at least 6 characters)",

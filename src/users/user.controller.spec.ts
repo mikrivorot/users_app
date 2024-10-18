@@ -6,6 +6,15 @@ describe("UsersController", () => {
   let controller: UsersController;
   let service: UsersService;
 
+  const userDto = {
+    "pseudonyme": "non_admin",
+    "name": "John Doe",
+    "address": "123 Main St, City, Country",
+    "commentaire": "Optional comment about the user",
+    "password": "non_admin",
+    "userType": "user"
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -13,11 +22,11 @@ describe("UsersController", () => {
         {
           provide: UsersService,
           useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findById: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
+            create: jest.fn(() => userDto),
+            findAll: jest.fn(() => [userDto]),
+            findById: jest.fn(() => userDto),
+            update: jest.fn(() => userDto),
+            delete: jest.fn(() => userDto),
           },
         },
       ],
@@ -32,14 +41,6 @@ describe("UsersController", () => {
   });
 
   it("should create a user", async () => {
-    const userDto = {
-      "pseudonyme": "non_admin",
-      "name": "John Doe",
-      "address": "123 Main St, City, Country",
-      "comment": "Optional comment about the user",
-      "password": "non_admin",
-      "userType": "user"
-    };
     await controller.createUser(userDto);
     expect(service.create).toHaveBeenCalledWith(userDto);
   });

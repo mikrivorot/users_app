@@ -33,7 +33,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsOptional()
-  comment?: string;
+  commentaire?: string;
 
   @ApiProperty({
     description: "Password for the user (at least 6 characters)",

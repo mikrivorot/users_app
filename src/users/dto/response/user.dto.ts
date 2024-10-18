@@ -17,7 +17,7 @@ export class UserResponseDto {
   @ApiProperty({
     description: "Optional comment about the user",
   })
-  comment?: string;
+  commentaire?: string;
 
   @ApiProperty({
     description: "User type (admin or non-admin)",

@@ -7,7 +7,7 @@ export class UserMapper {
         userDto.pseudonyme = user?.pseudonyme;
         userDto.name = user?.name;
         userDto.address = user?.address;
-        userDto.comment = user?.commentaire;
+        userDto.commentaire = user?.commentaire;
         userDto.userType = user?.userType;
         return userDto;
     }

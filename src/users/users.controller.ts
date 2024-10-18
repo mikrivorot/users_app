@@ -3,13 +3,15 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiOkResponse
+  ApiOkResponse,
+  ApiQuery
 } from "@nestjs/swagger";
 import {
   Controller,
   Get,
   Post,
   Delete,
+  Query,
   Body,
   Param,
   UseGuards,
@@ -25,6 +27,7 @@ import { UpdateUserDto } from './dto/request/user.update.dto';
 import { UserResponseDto } from './dto/response/user.dto';
 import { UserMapper } from './mappers/users'
 import { User, UserDocument } from "./user.schema";
+import { Filters } from './types';
 
 @ApiTags("users")
 @ApiBearerAuth()
@@ -46,11 +49,29 @@ export class UsersController {
   @ApiOperation({ summary: "Get a list of all users" })
   @ApiOkResponse({ status: 200, description: "List of users retrieved.", type: [UserResponseDto] })
   @ApiResponse({ status: 403, description: "Forbidden for non-admin users" })
+  @ApiQuery({ name: 'pseudonyme', required: false })
+  @ApiQuery({ name: 'name', required: false })
+  @ApiQuery({ name: 'address', required: false })
+  @ApiQuery({ name: 'commentaire', required: false })
+  @ApiQuery({ name: 'userType', required: false })
   @UseGuards(AuthGuard("jwt"), AdminGuard)
   @UserTypes("admin")
   @Get()
-  async getAllUsers(): Promise<UserResponseDto[]> {
-    const users: User[] = await this.usersService.findAll();
+  async getAllUsers(
+    @Query('pseudonyme') pseudonyme?: string,
+    @Query('name') name?: string,
+    @Query('address') address?: string,
+    @Query('commentaire') commentaire?: string,
+    @Query('userType') userType?: string
+  ): Promise<UserResponseDto[]> {
+    const filters: Filters = {
+      pseudonyme,
+      name,
+      address,
+      commentaire,
+      userType,
+    };
+    const users: User[] = await this.usersService.findAll(filters);
     return users.map(user => UserMapper.toUserDto(user));
   }
 

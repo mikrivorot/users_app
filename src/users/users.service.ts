@@ -31,8 +31,25 @@ export class UsersService {
     return user;
   }
 
-  async findAll(): Promise<UserDocument[]> {
-    return this.userModel.find().exec();
+  async findAll(filters): Promise<UserDocument[]> {
+    const query = {};
+    if (filters.pseudonyme) {
+      query['pseudonyme'] = filters.pseudonyme;
+    }
+    if (filters.name) {
+      query['name'] = filters.name;
+    }
+    if (filters.userType) {
+      query['userType'] = filters.userType;
+    }
+
+    if (filters.commentaire) {
+      query['commentaire'] = { $regex: filters.commentaire, $options: 'i' };
+    }
+    if (filters.address) {
+      query['address'] = { $regex: filters.address, $options: 'i' };
+    }
+    return this.userModel.find(query).exec();
   }
 
   async update(pseudonyme: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
