@@ -1,27 +1,23 @@
 ## Démarrer l'application
 
-### Local
+### Step 1: Lancer l'application et la base de données
 
-```
-npm i
-npm run build
-npm run start
-```
+[Aller sur le local (development + debug)](./docs/local.md)
 
-### Docker
+ou 
 
-#### Démarrer les conteneurs
-```
-npm run start:docker:full`
-```
+[Aller sur le docker](./docs/docker.md)
 
-![alt text](image.png)
+
+### Step 2: Vérifiez si l'application est accessible via `localhost`
 
 Aller sur le site `http://localhost:3000/api` pour voir Swagger.
 
-![alt text](image-1.png)
+![alt text](./docs/image-1.png)
 
-### Créé premier utilisateur
+### Step 3: Configurer le premier utilisateur administrateur pour gérer les utilisateurs
+
+#### 3.1 Créé premier utilisateur
 
 On a besoin de cree premier utilisateur (admin) pour faire autorisation et utiliser l'application
 
@@ -39,18 +35,14 @@ db.users.insertOne({
   userType: "admin"
 });
 ```
-
+#### 3.2 Vérifiez si `mongo-express` est accessible
 Aller sur le site `http://localhost:8081/` pour acceder Mongo Admin console
 
 Utiliser l'informations d'identification proposé:
 
-![alt text](image-2.png)
+![alt text](./docs/image-2.png)
 
 Premier Admin a été créé
-![alt text](image-3.png)
+![alt text](./docs/image-3.png)
 
-
-#### Arrêter les conteneurs
-```
-npm run stop:docker:full`
-```
+#### 3.3 Cree jwt token pour lancer l'utilisation de Swagger

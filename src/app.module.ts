@@ -6,8 +6,10 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(), // Automatically loads .env variables
-    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost/nest'),
+    ConfigModule.forRoot({ isGlobal: true, }),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI ||
+      `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_USERNAME}@localhost:${process.env.MONGO_PORT}/${process.env.MONGO_DB}?authSource=admin`),
     AuthModule,
     UsersModule,
   ],
