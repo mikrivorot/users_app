@@ -2,6 +2,13 @@
 
 ### Step 1: Lancer l'application et la base de données
 
+Créer un fichier et ajouter des informations d'identification locales en utilisant un modèle existant:
+
+```
+cp .env.example .env
+```
+
+
 [Aller sur le local (development + debug)](./docs/local.md)
 
 ou 
