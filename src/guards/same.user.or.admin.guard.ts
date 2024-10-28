@@ -12,7 +12,7 @@ export class IsSameUserOrAdminGuard implements CanActivate {
       return true;
     }
 
-    const request: any & { user: PayloadToSign } = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<{ params: { pseudonyme: string }, user: PayloadToSign }>();
 
     if (roles.includes(request?.user?.userType)) {
       return true;

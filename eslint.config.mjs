@@ -33,7 +33,7 @@ export default [{
 
         parserOptions: {
             project: "tsconfig.json",
-            tsconfigRootDir: "/Users/margarita.krivorot/projects/test_technique",
+            tsconfigRootDir: "./",
         },
     },
 
