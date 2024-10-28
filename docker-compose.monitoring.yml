@@ -1,0 +1,38 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+
+  # loki:
+  #   image: grafana/loki:2.5.0
+  #   container_name: loki
+  #   ports:
+  #     - 3100:3100
+  #   command: -config.file=/etc/loki/local-config.yaml
+  #   user: "1000:1000"  # Run as a non-root user
+  #   volumes:
+  #     - ./loki-local-config.yaml:/etc/loki/local-config.yaml
+  #     - ./loki-data:/tmp/loki  # Mount a folder on the host
+  #     - ./loki-data/index:/tmp/loki/index
+  #     - ./loki-data/chunks:/tmp/loki/chunks
+      
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3001:3000
+    depends_on:
+      - prometheus
+      # - loki
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana-provisioning:/etc/grafana/provisioning
+
+volumes:
+  loki_data:

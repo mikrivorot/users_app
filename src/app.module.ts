@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({ isGlobal: true, }),
     MongooseModule.forRoot(
       process.env.MONGO_URI ||
-      `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_USERNAME}@localhost:${process.env.MONGO_PORT}/${process.env.MONGO_DB}?authSource=admin`),
+      `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@localhost:${process.env.MONGO_PORT}/${process.env.MONGO_DB}?authSource=admin`),
     AuthModule,
     UsersModule,
   ],

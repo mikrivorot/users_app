@@ -34,14 +34,7 @@ docker exec -it mongo_for_test_technique bash
 mongosh -u <MONGO_USERNAME> -p <MONGO_PASSWORD>
 use <MONGO_DB>
 
-db.users.insertOne({
-  pseudonyme: "admin",
-  name: "admin",
-  address: "",
-  commentaire: "Utilisateur Admin pour commencer utilisation et creer les autres utilisateur",
-  password: <hash>
-  userType: "admin"
-});
+db.users.insertOne({ pseudonyme: "admin", name: "admin", address: "", commentaire: "Utilisateur Admin pour commencer  utilisation et creer les autres utilisateur", password: "$2a$10$73IG2grwPF7YOMNeGx8o/umGxKE9wgm3FxdeRQN6zx4TFsgNBupOW", userType: "admin" });
 ```
 #### 3.2 Vérifiez si `mongo-express` est accessible
 Aller sur le site `http://localhost:8081/` pour accéder Mongo Admin console
