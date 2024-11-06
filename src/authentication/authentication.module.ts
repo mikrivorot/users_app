@@ -6,9 +6,11 @@ import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './jwt.strategy';
 import { jwtConstants } from './constants';
 import { AuthController } from './authentication.controller';
+import { LoggerModule } from '../logger/logger.module'
 
 @Module({
     imports: [
+        LoggerModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
             secret: jwtConstants.secret,

@@ -15,9 +15,13 @@
     "start:docker:full": "docker compose -f docker-compose.full.yml up --build -d",
     "stop:docker:full": "docker compose -f docker-compose.full.yml down",
     "start:docker:mongo": "docker compose -f docker-compose.mongo.yml up --build -d",
-    "stop:docker:mongo": "docker compose -f docker-compose.mongo.yml down"
+    "stop:docker:mongo": "docker compose -f docker-compose.mongo.yml down",
+    "create:network": "docker network create my-network",
+    "start:elastic": "docker run -d --name elasticsearch --network my-network -p 9200:9200 -e \"discovery.type=single-node\" -e \"xpack.security.enabled=false\" elasticsearch:8.15.3",
+    "start:grafana": "docker run -d -p 3000:3000 --name=grafana --network my-network grafana/grafana"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.15.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
